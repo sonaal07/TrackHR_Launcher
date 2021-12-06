@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,140 +35,199 @@ public class MainActivity extends Activity {
     Timer timer;
     TimerTask timerTask;
     ImageView logo;
-    TextView tvhexbis;
+    TextView tvhexbis,tvheading;
     static String Settings_Password="727595";
     Boolean pause = false;
     Dialog d;
     int d_time = 20500;
     Context c;
+    boolean initStart = true;
+    boolean cacheCleared = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        logo = (ImageView)findViewById(R.id.ivset);
-        tvhexbis = (TextView) findViewById(R.id.tvhexbis);
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/spaceage.ttf");
-        tvhexbis.setTypeface(typeface);
+        setContentView(R.layout.activity_main_v2);
+        Log.e("SerialNo",getSerialNumber(getApplicationContext()));
 
+        uninstallApps();
+        disableApps();
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/deja_vu_sans_condensed.ttf");
+        ((TextView)findViewById(R.id.track)).setTypeface(typeface);
+
+        Typeface typeface2 = Typeface.createFromAsset(getAssets(), "fonts/deja_vu_sans_condensed_bold.ttf");
+        ((TextView)findViewById(R.id.hr)).setTypeface(typeface2);
 
         c = this;
-        //startapp();
-        logo.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                d = new Dialog(c, android.R.style.Theme_DeviceDefault_Dialog);
-                d.setTitle("Enter Password");
-                d.setContentView(R.layout.settings_password);
-                final EditText pass;
-                Button ok;
-                pass = (EditText) d.findViewById(R.id.etpass);
-                ok = (Button) d.findViewById(R.id.btnok);
-                pass.setHint("");
-                pass.setText("");
-                pass.requestFocus();
-
-                ok.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (pass.getText().toString().equals(Settings_Password)) {
-                            d_time = 20500;
-                            if (ShellInterface.isSuAvailable()) {
-                                try {
-                                    //ShellInterface.runCommand("service call activity 42 s16 com.android.systemui");
-                                    ShellInterface.runCommand("am startservice -n com.android.systemui/.SystemUIService");
-                                    Toast.makeText(getApplicationContext(),"Bar On",Toast.LENGTH_SHORT).show();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            d.dismiss();
 
 
-                        } else {
-                            pass.setHint("Wrong Password");
-                            pass.setText("");
-                        }
-
-                    }
-                });
-                d.show();
-                return true;
-            }
-        });
-
-        if (ShellInterface.isSuAvailable()) {
-            try {
-                //ShellInterface.runCommand("service call activity 42 s16 com.android.systemui");
-                ShellInterface.runCommand("setprop service.adb.tcp.port 5555");
-                ShellInterface.runCommand("stop adbd");
-                ShellInterface.runCommand("start adbd");
-                Toast.makeText(getApplicationContext(),"ADB ON",Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         if (ShellInterface.isSuAvailable()) {
             try {
                 ShellInterface.runCommand("service call activity 42 s16 com.android.systemui");
-                //ShellInterface.runCommand("am startservice -n com.android.systemui/.SystemUIService");
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
-        hex = (ImageView)findViewById(R.id.hex);
-        hex_inner = (ImageView)findViewById(R.id.ivlogo_inner);
-        hex_outer = (ImageView)findViewById(R.id.ivlogo_outer);
+    }
 
-        rotate_half = AnimationUtils.loadAnimation(this, R.anim.rotate_half);
-        zoomin = AnimationUtils.loadAnimation(this, R.anim.zoomin);
-        //hex_inner.startAnimation(zoomin);
-        zoomin.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        hex_outer.startAnimation(rotate);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        hex_inner.clearAnimation();
-                        //hex_inner.startAnimation(rotate_half);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                rotate_half.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        hex_inner.setRotation(90f);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
-                //hex.startAnimation(rotate);
-
-
-
-            //disable = true;
-
-
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 
     Thread logotimer1;
     int skip = 0;
+
+    public void enableDubugging()
+    {
+            try {
+                if (ShellInterface.isSuAvailable()) {
+                    //ShellInterface.runCommand("service call activity 42 s16 com.android.systemui");
+                    ShellInterface.runCommand("setprop service.adb.tcp.port 5555");
+                    ShellInterface.runCommand("stop adbd");
+                    ShellInterface.runCommand("start adbd");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "ADB ON", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+    }
+
+    public void disableDubugging()
+    {
+        if (ShellInterface.isSuAvailable()) {
+            try {
+                //ShellInterface.runCommand("service call activity 42 s16 com.android.systemui");
+//                ShellInterface.runCommand("setprop service.adb.tcp.port 5555");
+//                ShellInterface.runCommand("stop adbd");
+//                ShellInterface.runCommand("start adbd");
+                ShellInterface.runCommand("stop adbd");
+                Toast.makeText(getApplicationContext(),"ADB Stopped",Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void disableApp(String packageName)
+    {
+        try {
+            Process process = Runtime.getRuntime().exec(new String[]{"su", "-c", "pm disable "+packageName});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void disableApps()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String[] packages = new String[]{
+                        "com.oranth.tvlauncher",
+                        "com.android.vending"};
+                for (int i=0;i<packages.length;i++) {
+                    disableApp(packages[i]);
+                }
+            }
+        }).start();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_1:
+                enableDubugging();
+                return true;
+        }
+        return false;
+    }
+
+
+    public void uninstallApps()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String[] packages = new String[]{"ru.andr7e.deviceinfohw.pro",
+                        "org.xbmc.kodi",
+                        "com.valor.mfc.droid.tvapp.generic",
+                        "com.netflix.mediaclient",
+
+                        "com.csdroid.pkg",
+                        "com.mm.droid.livetv.tve",
+                        "com.google.android.youtube.tv",
+                        //"com.oranth.tvlauncher",
+                        "com.ionitech.airscreen",
+                        "cm.aptoidetv.pt"};
+                for (int i=0;i<packages.length;i++) {
+                    uninstallApp(packages[i]);
+                }
+            }
+        }).start();
+    }
+
+    public static String getSerialNumber(Context context) {
+        return Build.SERIAL;
+    }
+
+    public void uninstallApp(String packageName)
+    {
+        try {
+            //adb uninstall --user 0 <package_name>
+            Process process = Runtime.getRuntime().exec(new String[]{"su", "adb", " uninstall --user 0 "+packageName});
+            //Process process = Runtime.getRuntime().exec(new String[]{"su", "-c", "pm uninstall "+packageName});
+            process.waitFor();
+        }catch (Exception e)
+        {
+
+        }
+    }
+
+    public void clearCache()
+    {
+        if(cacheCleared)
+        {
+            return;
+        }
+        String packageName = "com.hexbis.trackhr.attendance";
+        try {
+            cacheCleared = true;
+            Process process = Runtime.getRuntime().exec(new String[]{"adb shell su -c \"rm -rf /data/data/"+packageName,"/cache/*\""});
+            process.waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    int lastKeyCode = -1;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        Log.d("keyEvent", String.valueOf(event.getKeyCode()));
+
+        if(event.getKeyCode()==8&&lastKeyCode==8) {
+            Intent intent;
+            PackageManager pm = getPackageManager();
+            intent = pm.getLaunchIntentForPackage("eu.chainfire.supersu");
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            lastKeyCode=-1;
+        }
+        else
+        {
+            lastKeyCode=event.getKeyCode();
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
     void startapp()
     {
         if(skip==1) {
@@ -175,6 +238,7 @@ public class MainActivity extends Activity {
         logotimer1 = new Thread() {
             public void run() {
                 try {
+                    //clearCache();
                     logotimer = 0;
                     while (logotimer < d_time) {
                         sleep(100);
@@ -203,8 +267,10 @@ public class MainActivity extends Activity {
                                 }
 
                             }
+                            i.putExtra("Restart",initStart);
+                            initStart=false;
                             i.addCategory(Intent.CATEGORY_LAUNCHER);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(i);
                         } catch (Exception e) {
                             Log.e("HexLauncher ","PM Error");

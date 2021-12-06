@@ -1,153 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="#1B2229"
-    android:gravity="center">
+    android:background="@drawable/trackhr_back"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvheading"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivlogo"
+            android:layout_width="444dp"
+            android:layout_height="400dp"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitXY"
+            android:src="@drawable/splash" />
+
+    </LinearLayout>
 
     <TextView
 
+        android:id="@+id/tvheading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:background="#0000"
-        android:fontFamily="@font/gotu"
+        android:fontFamily="@font/product_sans_bold"
         android:gravity="center"
-        android:text="TrackHR"
+        android:text="TrackHr"
         android:textColor="#000000"
-        android:textSize="80dip"
+        android:textSize="100sp"
         android:textStyle="normal"
         android:translationZ="10dip"
         android:visibility="visible" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:background="@drawable/trackhr_back"
+        android:layout_marginBottom="20dip"
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/ivlogo"
-            android:layout_width="300dip"
-            android:layout_height="300dip"
-            android:src="@drawable/splash" />
-
-        <ImageView
-            android:layout_width="400dip"
-            android:layout_height="150dip"
-            android:src="@drawable/wordmark"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="20dip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
-        >
         <TextView
             android:layout_width="wrap_content"
-            android:layout_gravity="left"
             android:layout_height="match_parent"
-            android:textSize="18dip"
+            android:layout_gravity="left"
             android:gravity="left"
-            android:textStyle=""
+            android:text="Powered by"
             android:textColor="#fff"
-            android:text="Powered by"/>
+            android:textSize="18sp"
+            android:textStyle="" />
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/tvhexbis"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
                 android:layout_height="match_parent"
-                android:textSize="30dip"
-                android:gravity="center|left"
-                android:textStyle="bold"
-                android:textColor="#EE0000"
+                android:layout_gravity="center"
                 android:layout_marginRight="2dip"
                 android:fontFamily="@font/spacefamily"
-                android:text="hexbIs"/>
+                android:gravity="center|left"
+                android:text="hexbIs"
+                android:textColor="#EE0000"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
             <ImageView
-                android:layout_width="40dip"
+                android:id="@+id/ivlogo_hexbottom"
+                android:layout_width="44dp"
                 android:layout_height="40dip"
                 android:layout_gravity="bottom"
-                android:id="@+id/ivlogo_hexbottom"
-                android:src="@drawable/hexicon19"
-                />
+                android:scaleType="fitXY"
+                android:src="@drawable/hexicon19" />
         </LinearLayout>
     </LinearLayout>
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/ivlogo_outer"
-        android:src="@drawable/hexicon_outer"
-        android:visibility="gone"
-        />
-    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:src="@drawable/hexicon_outer"
+        android:visibility="gone" />
+
+    <ImageView
         android:id="@+id/ivlogo_inner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:src="@drawable/hexicon_inner"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dip"
         android:text="MDU Launcher"
         android:textSize="20dip"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="10dip"
-        />
+        android:visibility="gone" />
+
     <ImageView
-        android:visibility="gone"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dip"
+        android:id="@+id/ivset"
         android:layout_width="50dip"
         android:layout_height="50dip"
-        android:id="@+id/ivset"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dip"
         android:src="@drawable/set"
-        />
+        android:visibility="gone" />
 
 
     <ImageView
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/hex_c"
-        android:src="@drawable/hex_center"
-        android:padding="20dp"
-        android:visibility="invisible" />
-    <ImageView
-        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/hex"
-        android:src="@drawable/hex"
+        android:layout_centerInParent="true"
         android:padding="20dp"
+        android:src="@drawable/hex_center"
         android:visibility="invisible" />
 
     <ImageView
-        android:layout_centerInParent="true"
+        android:id="@+id/hex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/hex_t"
-        android:src="@drawable/hex_text"
+        android:layout_centerInParent="true"
         android:padding="20dp"
+        android:src="@drawable/hex"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/hex_t"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="20dp"
+        android:src="@drawable/hex_text"
         android:visibility="invisible" />
 </RelativeLayout>
